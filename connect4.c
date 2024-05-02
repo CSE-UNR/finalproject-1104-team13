@@ -11,7 +11,7 @@
 #define SAVE_GAME "saveGame.txt"
 
 
-void loadGame(char **board[BOARD_HEIGHT][BOARD_WIDTH]){
+void loadGame(char board[BOARD_HEIGHT][BOARD_WIDTH]){
     FILE* saveGame;
     saveGame = fopen(SAVE_GAME, "r");
 
@@ -21,27 +21,56 @@ void loadGame(char **board[BOARD_HEIGHT][BOARD_WIDTH]){
     }
 
     for(int i = 0; i <= BOARD_HEIGHT; i++){
-        for(int j = 0; j<= BOARD_WIDTH; j++)
+        for(int j = 0; j< BOARD_WIDTH; j++)
             fscanf(saveGame, " %c", &board[i][j]);
     }
 
 }
 
-void displayBoard(char **board[BOARD_HEIGHT][BOARD_WIDTH]){
+void displayBoard(char board[BOARD_HEIGHT][BOARD_WIDTH]){
     for(int i = 0; i<=BOARD_HEIGHT; i++){
-        for(int j = 0; j<= BOARD_WIDTH; j++)
-            printf("%1c", board[i][j]);
-
+        for(int j = 0; j< BOARD_WIDTH; j++)
+            printf("%1c", board[j][i]);
+        printf("\n");
     }
 
 }
 
+void getMove(int turn, bool player1Turn, int move){
+    turn = turn + 1; 
+    if(turn%2 != 0){
+        player1Turn = true;
+    }
+    
+    printf("player 1 turn, enter column: ");
+    scanf("%d",&move);
+}
+
+void updateMove(char board[BOARD_HEIGHT][BOARD_WIDTH], int move, char *token){
+    for(int i = BOARD_HEIGHT; (i - 1) != '.'; i--){
+        board[i][move] = *token;
+    }
+
+}
+
+
+
 int main(){
     char board[BOARD_HEIGHT][BOARD_WIDTH];
-    char player1, player2;
+    char player1Token, player2Token, token;
+    
 
-    loadGame(&board[BOARD_HEIGHT][BOARD_WIDTH]);
-    displayBoard(&board[BOARD_HEIGHT][BOARD_WIDTH]);
+    int turn = 0;
+    bool player1Turn;
+    int move = 1;
+
+
+
+
+    loadGame(board);
+    displayBoard(board);
+    updateMove(board, move, &token);
+    displayBoard(board);
 
 
 
