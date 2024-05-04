@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 #define BOARD_HEIGHT 7
-#define BOARD_WIDTH 8
+#define BOARD_WIDTH 7
 
 #define SAVE_GAME "saveGame.txt"
 #define TEST "test.txt"
@@ -30,7 +30,7 @@ void loadGame(char board[BOARD_HEIGHT][BOARD_WIDTH]){
 void displayBoard(char board[BOARD_HEIGHT][BOARD_WIDTH]){
     for(int i = 0; i < BOARD_HEIGHT; i++){
         for(int j = 0; j < BOARD_WIDTH; j++)
-            printf("%c", board[i][j]);
+            printf("%c", board[j][i]);
         printf("\n");
     }
 
@@ -51,7 +51,7 @@ void getMove(int turn, int *move){
     scanf("%i",&tempMove);
     if(tempMove > 7){
         printf("Invalid Move, Try Again: ");
-        scanf("%i", &move);
+        scanf("%i", move);
     }
     *move = tempMove - 1;
 }
@@ -67,7 +67,7 @@ void updateMove(char board[BOARD_HEIGHT][BOARD_WIDTH], int move, char token, int
     
 
 bool checkWin(char board[BOARD_HEIGHT][BOARD_WIDTH], char token){
-//vertical win
+//horizontal win
    bool win = false;
    
     for(int j = 0; j < BOARD_WIDTH; j++){
@@ -77,8 +77,14 @@ bool checkWin(char board[BOARD_HEIGHT][BOARD_WIDTH], char token){
              }
         }    
     }
-
-    return win;
+	for(int j = 0; j < BOARD_WIDTH; j++){
+        	for(int i = 0; i + 4 < BOARD_HEIGHT; i++){
+          	  	if(board[i][j] == board [i+1][j] && board [i+1][j] == board[i+2][j] && board[i+2][j] == board[i+3][j] && board [i][j] == token){
+            	   		 win = true;
+             		}
+       		}    
+    }    
+	return win;
 }
 
 int main(){
@@ -99,7 +105,7 @@ int main(){
     displayBoard(board);
     turn = turn + 1;
     }while(checkWin(board, token)!= true);
-   
+   printf("congrats, you win!");
    
    
     return 0;

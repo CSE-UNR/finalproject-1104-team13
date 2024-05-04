@@ -30,7 +30,7 @@ void loadGame(char board[BOARD_HEIGHT][BOARD_WIDTH]){
 void displayBoard(char board[BOARD_HEIGHT][BOARD_WIDTH]){
     for(int i = 0; i < BOARD_HEIGHT; i++){
         for(int j = 0; j < BOARD_WIDTH; j++)
-            printf("%c", board[i][j]);
+            printf("%c", board[j][i]);
         printf("\n");
     }
 
