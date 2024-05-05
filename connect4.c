@@ -49,20 +49,23 @@ void getMove(int turn, int *move){
     
     //Actually get the move
     scanf("%i",&tempMove);
-    if(tempMove > 7){
-        printf("Invalid Move, Try Again: ");
-        scanf("%i", move);
+    if(1 <= tempMove && tempMove <=7){
     }
+    else{
+    	printf("invalid move, try again");
+    	scanf(" %i", &tempMove);
+    }
+    //This just moves the desired move to the correct index in the array
     *move = tempMove - 1;
 }
 
 void updateMove(char board[BOARD_HEIGHT][BOARD_WIDTH], int move, char token, int turn){
     //gravity
-    int i = 0;
-    while(board[move][i] == '.' && board[move][i+1]=='.'){
-        i++;
+    int j = 0;
+    while(board[move][j] == '.' && board[move][j+1]=='.'){
+        j++;
     }
-    board[move][i] = token;
+    board[move][j] = token;
 }
     
 
@@ -77,14 +80,38 @@ bool checkWin(char board[BOARD_HEIGHT][BOARD_WIDTH], char token){
              }
         }    
     }
-	for(int j = 0; j < BOARD_WIDTH; j++){
-        	for(int i = 0; i + 4 < BOARD_HEIGHT; i++){
-          	  	if(board[i][j] == board [i+1][j] && board [i+1][j] == board[i+2][j] && board[i+2][j] == board[i+3][j] && board [i][j] == token){
-            	   		 win = true;
-             		}
-       		}    
-    }    
+    
+//vertical win	
+	for(int i = 0; i + 3 < BOARD_WIDTH; i++){
+        	for(int j = 0; j + 4 < BOARD_WIDTH; j++){
+          	  	if(board[i][j] == board [i][j+1] && board [i][j+1] == board[i][j+2] && board[i][j+2] == board[i][j+3] && board [i][j] == token){
+             	   		win = true;
+            		}
+       		}
+   	}
+//diagonal win going NOT like this /
+	for(int i = 0; i + 3 < BOARD_WIDTH; i++){
+        	for(int j = 0; j + 4 < BOARD_WIDTH; j++){
+          	  	if(board[i][j] == board [i+1][j+1] && board [i+1][j+1] == board[i+2][j+2] && board[i+2][j+2] == board[i+3][j+3] && board [i][j] == token){
+             	   		win = true;
+            		}
+       		}
+   	}
+   	     
 	return win;
+}
+
+void whichToken(int turn, bool player1Turn, char player1Token, char player2Token, char *token){
+	if(turn%2 != 0){
+        player1Turn = true;
+    	}
+	if(player1Turn == true){
+		*token = player1Token;
+	}
+	else{
+		*token =  player2Token;
+	}
+	
 }
 
 int main(){
@@ -93,19 +120,27 @@ int main(){
     int turn = 1;
     bool player1Turn;
     int move;
-    char token = 'd';
-
+    char player1Token, player2Token;
+    char token;
+	
+	
+	printf("player 1 enter your letter:");
+	scanf(" %c", &player1Token);
+	printf("player 2 enter your letter:");
+	scanf(" %c", &player2Token);
+	
     loadGame(board);
     displayBoard(board);
     
     //Gameplay Loop
     do{
+    whichToken(turn, player1Turn, player1Token, player2Token, &token);
     getMove(turn, &move);
     updateMove(board, move, token, turn); 
     displayBoard(board);
     turn = turn + 1;
     }while(checkWin(board, token)!= true);
-   printf("congrats, you win!");
+   printf("congrats, you win!\n"); 
    
    
     return 0;
