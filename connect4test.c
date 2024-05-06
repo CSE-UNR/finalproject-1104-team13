@@ -128,6 +128,7 @@ void displayMenu() {
 	printf("1: Start a new game\n");
 	printf("2: Load a saved game\n");
 	printf("3: Exit\n");
+	printf("Tooltip: To save a game, type 'save' on your turn.\n");
 	printf("Choose an option: ");
 }
 
