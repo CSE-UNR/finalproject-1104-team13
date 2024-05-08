@@ -4,7 +4,8 @@
 #define MAX_WIDTH 100 
 #define MAX_HEIGHT 100 
 
-int image[MAX_HEIGHT][MAX_WIDTH]; // Image data 
+int workingImage[MAX_HEIGHT][MAX_WIDTH];
+char image[MAX_HEIGHT][MAX_WIDTH]; // Image data 
 char brightnessChars[] = {' ', '.', 'o', 'O', '0'}; // Mapping brightness values to characters 
 
 void loadImage(char *filename, int *rows, int *cols) { 
@@ -13,38 +14,35 @@ void loadImage(char *filename, int *rows, int *cols) {
 		printf("Error opening file\n"); 
 		return; 
 	} 
-	
-	if (fscanf(file, "%d %d", rows, cols) != 2) {
-		fprintf(stderr, "Error reading file dimensions.\n");
-		rows = 0;
-		cols = 0;
-		fclose(file);
-		return;
-	}
-	
-	for (int i = 0; i < *rows; i++) {
-		for (int j = 0; j < *cols; j++) {
-			if (fscanf(file, "%d", &image[i][j]) != 1) {
-				fprintf(stderr, "Error reading image data.");
-				rows = 0;
-				cols = 0;
-				fclose(file);
-				return;
-			}
+	int i = 0, n = 0;
+	char temp;
+	while(fscanf(file, "%c", &temp) == 1)
+		if(temp == '\0'){
 		}
-	}
+		else{
+			image[n][i] = temp;
+			i++;	
+		}	
+	
+	
+	printf("Sanity Check: %s", image[0]);
+	
+	
 	
 	fclose(file); 
 	printf("Image loaded successfully.\n"); 
 } 
 
-void displayImage(int rows, int cols) { 
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
-			int pixelValue = image[i][j];
-			printf("%c", brightnessChars[pixelValue]);
+void displayImage(char image[MAX_HEIGHT][MAX_WIDTH]) { 
+	int c = 0, r = 0, n = 0;
+	for(int i = 0; image[n][i] != '\0'; i++){
+		if(image[n][i] == '\n'){
+			r++;
 		}
-		printf("\n");
+		else{
+			c++;
+		}
+		printf("rows: %i\n col: %i\n", r, c/r);
 	}
 }
 
@@ -128,6 +126,7 @@ void editImage(int rows, int cols) {
 } 
 
 int main() { 
+	
 	int rows = 0, cols = 0; 
 	int choice; 
 	char filename[256]; 
@@ -144,10 +143,10 @@ int main() {
 				loadImage(filename, &rows, &cols); 
 				break; 
 			case 2: 
-				if (rows == 0 || cols == 0) { 
+				if (image[0][0] == ' ') { 
 					printf("No image loaded. Please load an image first.\n"); 
 				} else { 
-					displayImage(rows, cols); 
+					displayImage(image); 
 				} 
 				break; 
 			case 3: 
